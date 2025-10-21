@@ -1,0 +1,58 @@
+# Arbitrarily-delimited values
+name: "Delimiter-separated values"
+scopeName: "source.dsv"
+fileTypes: ["dsv"]
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "#record"}
+		]
+
+
+	# Stuff matched inside a tokenised record field
+	field:
+		patterns: [{
+			# Trailing delimiter, or one followed by an empty field
+			name:  "meta.field.empty.dsv"
+			match: "(.)[ \\t\\v\\f]*(?=$|\\1)"
+			captures:
+				1: patterns: [include: "#separator"]
+		},{
+			# Delimiter followed by non-blank field data
+			name:  "meta.field.dsv"
+			begin: "(.)(\\s*)(?=\\S)(?!\\1)"
+			end:   "([ \\t\\v\\f]*)(?=\\1|$)"
+			beginCaptures:
+				1: patterns: [include: "#separator"]
+				2: name: "punctuation.whitespace.leading.dsv"
+			endCaptures:
+				1: name: "punctuation.whitespace.trailing.dsv"
+			contentName: "string.unquoted.dsv"
+		}]
+
+
+	# Data row with uniform (matching) delimiter characters
+	record:
+		name:  "meta.record.dsv"
+		begin: "(?:^(\\s*)([^;:|~#^!\\x1C-\\x1F]+?)(\\s*))?(?=([;:|~#^!\\x1C-\\x1F]))"
+		end:   "(?!\\G)(?=\\4|$)"
+		beginCaptures:
+			1: name: "punctuation.whitespace.leading.dsv"
+			2: name: "string.unquoted.dsv"
+			3: name: "punctuation.whitespace.trailing.dsv"
+		patterns: [include: "#field"]
+
+
+	# Whatever character is being used to delimit tabular data
+	separator:
+		name: "keyword.operator.separator.dsv"
+		match: "."
+		captures: 0: patterns: [
+			{match: "\\x1C", name: "punctuation.c0.ctrl-char.file-separator.dsv"}
+			{match: "\\x1D", name: "punctuation.c0.ctrl-char.group-separator.dsv"}
+			{match: "\\x1E", name: "punctuation.c0.ctrl-char.record-separator.dsv"}
+			{match: "\\x1F", name: "punctuation.c0.ctrl-char.unit-separator.dsv"}
+			{match: ".",     name: "punctuation.separator.delimiter.dsv"}
+		]
