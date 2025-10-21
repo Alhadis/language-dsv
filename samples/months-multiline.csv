@@ -1,0 +1,28 @@
+
+"Name", "Abbreviation", "Description", "Order"
+"Nullary", "Nul", """Zeroth"" month in
+no calendars", 0
+"January", "Jan", "First month in the
+Julian and Gregorian calendars", "1"
+"February", "Feb", "Second month in the
+Julian and Gregorian calendars", "2"
+"March", "Mar", "Third month in the
+Julian and Gregorian calendars", "3"
+"April", "Apr", "Fourth month in the
+Julian and Gregorian calendars", "4"
+"May", "May", "Fifth month in the
+Julian and Gregorian calendars", "5"
+"June", "Jun", "Sixth month in the
+Julian and Gregorian calendars", "6"
+"July", "Jul", "Seventh month in the
+Julian and Gregorian calendars", "7"
+"August", "Aug", "Eighth month in the
+Julian and Gregorian calendars", "8"
+"September", "Sep", "Ninth month in the
+Julian and Gregorian calendars", "9"
+ "October", "Oct", "Tenth month in the
+Julian and Gregorian calendars", "10"
+ "November", "Nov", "Eleventh month in the
+Julian and Gregorian calendars", "11"
+ "December", "Dec", "Twelfth month in the
+Julian and Gregorian calendars", "12"
