@@ -63,13 +63,13 @@ repository:
 
 	# Data row
 	record:
-		name:  "meta.table.record.tsv"
+		name:  "meta.table.record.csv"
 		begin: "^(?=.*?,)"
 		end:   "$"
 		applyEndPatternLast: yes
 		patterns: [{
 			# Quoted field
-			name:  "meta.table.field.tsv"
+			name:  "meta.table.field.csv"
 			begin: '(?:^|\\G|(?<=,))(\\s*)(?=[^\\s,])'
 			end:   '([ \\t\\f\\v]*)(?=,|$)'
 			applyEndPatternLast: yes
