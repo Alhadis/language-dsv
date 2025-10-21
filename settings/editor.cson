@@ -1,0 +1,10 @@
+# Comments aren't nominally supported by any of these formats
+".source.csv, .source.dsv, .source.tsv":
+	editor:
+		commentStart: null
+		commentEnd:   null
+
+# Force actual tabs to be used in tab-separated data
+".source.tsv":
+	editor:
+		softTabs: false
