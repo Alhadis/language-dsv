@@ -3,6 +3,7 @@ name: "Comma-separated values"
 scopeName: "source.csv"
 mimeType: "text/csv"
 fileTypes: ["csv"]
+injectionSelector: "source.embedded.csv"
 patterns: [include: "#main"]
 
 repository:

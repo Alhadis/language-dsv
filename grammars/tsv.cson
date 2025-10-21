@@ -3,6 +3,7 @@ name: "Tab-separated values"
 scopeName: "source.tsv"
 mimeType: "text/tab-separated-values"
 fileTypes: ["tsv", "tab"]
+injectionSelector: "source.embedded.tsv"
 patterns: [include: "#main"]
 
 repository:
