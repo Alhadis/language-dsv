@@ -1,0 +1,109 @@
+# TSV data
+name: "Tab-separated values"
+scopeName: "source.tsv"
+mimeType: "text/tab-separated-values"
+fileTypes: ["tsv", "tab"]
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "#header"}
+			{include: "#record"}
+		]
+
+
+	# C-style escapes, supported only by common convention
+	escapes:
+		patterns: [{
+			# Embedded tab
+			name:  "constant.character.escape.tab.tsv"
+			match: "(\\\\)t"
+			captures:
+				1: name: "punctuation.definition.escape.backslash.tsv"
+		},{
+			# Escaped backslash
+			name:  "constant.character.escape.backslash.tsv"
+			match: "(\\\\)\\\\"
+			captures:
+				1: name: "punctuation.definition.escape.backslash.tsv"
+		},{
+			# Embedded line-feed
+			name: "constant.character.escape.line-feed.tsv"
+			match: "(\\\\)n"
+			captures:
+				1: name: "punctuation.definition.escape.backslash.tsv"
+		},{
+			# Embedded carriage return
+			name: "constant.character.escape.carriage-return.tsv"
+			match: "(\\\\)r"
+			captures:
+				1: name: "punctuation.definition.escape.backslash.tsv"
+		}]
+
+
+	# Values matched inside a tokenised field
+	field:
+		patterns: [{
+			# Numeric values
+			name: "constant.numeric.decimal.tsv"
+			match: "^[-+]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)$"
+		},{
+			# Boolean values
+			match: "(?i)^(?:(true|yes|on)|(false|no|off))$"
+			captures:
+				1: name: "constant.language.boolean.true.tsv"
+				2: name: "constant.language.boolean.false.tsv"
+		},{
+			# Linear TSV's keyword for indicating an SQL-like NULL value
+			name: "support.constant.language.null.tsv"
+			match: "^(\\\\)N$"
+			captures:
+				1: name: "punctuation.definition.null.backslash.tsv"
+		},{
+			# Highlight anything else as a string
+			name: "string.unquoted.other.tsv"
+			match: "^.+$"
+			captures:
+				0: patterns: [include: "#escapes"]
+		}]
+
+
+	# Initial row, assumed to contain field names
+	header:
+		begin: "\\A"
+		end:   "(?!\\G)"
+		applyEndPatternLast: yes
+		patterns: [{
+			# Skip leading whitespace
+			begin: "\\G(?=\\s*$)"
+			end:   "\\s*(?=\\S)"
+		},{
+			# Begin header
+			name:  "meta.table.header.tsv"
+			begin: "(?=\\S)(?=.*\\t)"
+			end:   "$"
+			patterns: [{
+				# Column name
+				name: "entity.name.column.tsv"
+				match: "[^\\t\\r\\n]+"
+			}, include: "#separator"]
+		}]
+
+
+	# Data row
+	record:
+		name:  "meta.table.record.tsv"
+		begin: "^(?=.*\\t)"
+		end:   "$"
+		patterns: [{
+			match: "[^\\t\\r\\n]+"
+			captures:
+				0: patterns: [include: "#field"]
+		}, include: "#separator"]
+
+
+	# Field delimiter
+	separator:
+		name: "punctuation.whitespace.separator.tab.tsv"
+		match: "\\t"

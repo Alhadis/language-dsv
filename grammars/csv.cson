@@ -1,0 +1,100 @@
+# RFC 4180-compliant CSV data
+name: "Comma-separated values"
+scopeName: "source.csv"
+mimeType: "text/csv"
+fileTypes: ["csv"]
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "#header"}
+			{include: "#record"}
+		]
+
+
+	# An escaped double-quote character
+	escape:
+		name: "constant.character.escape.quote.csv"
+		match: '""'
+
+
+	# Initial row, assumed to contain field names
+	header:
+		begin: "\\A"
+		end:   "(?!\\G)"
+		applyEndPatternLast: yes
+		patterns: [{
+			# Skip leading whitespace
+			begin: "\\G(?=\\s*$)"
+			end:   "\\s*(?=\\S)"
+		},{
+			# Begin header names
+			name:  "meta.table.header.csv"
+			begin: "(?=\\S)"
+			end:   "(?!\\G)"
+			applyEndPatternLast: yes
+			patterns: [{
+				# Column name
+				name:  "meta.table.field.csv"
+				begin: '(?:^|\\G|(?<=,))(\\s*)(?=[^\\s,])'
+				end:   '([ \\t\\f\\v]*)(?=,|$)'
+				beginCaptures: 1: name: "punctuation.whitespace.leading.csv"
+				endCaptures:   1: name: "punctuation.whitespace.trailing.csv"
+				patterns: [{
+					# Quoted
+					name:  "entity.name.column.quoted.csv"
+					begin: '\\G"'
+					end:   '"'
+					applyEndPatternLast: yes
+					beginCaptures: 0: name: "punctuation.definition.column.begin.csv"
+					endCaptures:   0: name: "punctuation.definition.column.end.csv"
+					patterns: [include: "#escape"]
+				},{
+					# Unquoted
+					name:  "entity.name.column.unquoted.csv"
+					begin: '\\G(?=[^\\s,"])'
+					end:   '(?=\\s*(?:,|$))'
+				}]
+			}, include: "#separator"]
+		}]
+
+
+	# Data row
+	record:
+		name:  "meta.table.record.tsv"
+		begin: "^(?=.*?,)"
+		end:   "$"
+		applyEndPatternLast: yes
+		patterns: [{
+			# Quoted field
+			name:  "meta.table.field.tsv"
+			begin: '(?:^|\\G|(?<=,))(\\s*)(?=[^\\s,])'
+			end:   '([ \\t\\f\\v]*)(?=,|$)'
+			applyEndPatternLast: yes
+			beginCaptures: 1: name: "punctuation.whitespace.leading.csv"
+			endCaptures:   1: name: "punctuation.whitespace.trailing.csv"
+			patterns: [{
+				# Double-quoted string, possibly spanning multiple lines
+				name:  "string.quoted.double.csv"
+				begin: '\\G"'
+				end:   '"'
+				applyEndPatternLast: yes
+				beginCaptures: 0: name: "punctuation.definition.string.begin.csv"
+				endCaptures:   0: name: "punctuation.definition.string.end.csv"
+				patterns: [include: "#escape"]
+			},{
+				# Unquoted string, possible with embedded double-quotes
+				name:  "string.unquoted.csv"
+				begin: '\\G(?=[^\\s,"])'
+				end:   '(?=\\s*(?:,|$))'
+			}]
+		}, include: "#separator"]
+		
+
+	# Comma separating fields or column names
+	separator:
+		name: "keyword.operator.separator.csv"
+		match: ","
+		captures:
+			0: name: "punctuation.separator.delimiter.comma.csv"

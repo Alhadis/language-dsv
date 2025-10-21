@@ -1,0 +1,9 @@
+{
+	"name": "language-dsv",
+	"version": "v0.0.0",
+	"description": "Syntax highlighting for delimiter-separated values formats.",
+	"repository": "https://github.com/Alhadis/language-dsv",
+	"author": "John Gardner <gardnerjohng@gmail.com>",
+	"license": "ISC",
+	"engines": {"atom": "*"}
+}
