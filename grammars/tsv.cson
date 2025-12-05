@@ -3,6 +3,7 @@ name: "Tab-separated values"
 scopeName: "source.tsv"
 mimeType: "text/tab-separated-values"
 fileTypes: ["tsv", "tab"]
+firstLineMatch: "\\AFrequency \\(Hz\\)\\tLevel \\(dB\\)$"
 injectionSelector: "source.embedded.tsv"
 patterns: [include: "#main"]
 
