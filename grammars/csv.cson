@@ -4,7 +4,12 @@ scopeName: "source.csv"
 mimeType: "text/csv"
 fileTypes: ["csv"]
 injectionSelector: "source.embedded.csv"
-patterns: [include: "#main"]
+patterns: [{
+	# Attempt to fix highlighting of TSV files misidentified as CSV
+	begin: '\\A(?=[^\\s"]+(?:\\t[^\\s"]+)++\\s*$)'
+	end:   "(?=A)B"
+	patterns: [include: "source.tsv"]
+}, include: "#main"]
 
 repository:
 	main:
